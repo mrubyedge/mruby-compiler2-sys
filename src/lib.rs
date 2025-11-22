@@ -43,7 +43,8 @@ impl MRubyCompiler2Context {
                 panic!("Failed to compile code");
             }
 
-            let mut bin: Vec<u8> = Vec::new();
+            // Set dummy capacity, deduced from code length
+            let mut bin: Vec<u8> = Vec::with_capacity(code.len() * 2);
             let bin_ptr = bin.as_mut_ptr();
             let mut bin_size: usize = 0;
 
@@ -58,11 +59,18 @@ impl MRubyCompiler2Context {
                 panic!("Failed to dump irep");
             }
             mrc_irep_free(self.c, irep as *mut mrc_irep);
-            mrc_ccontext_free(self.c);
 
             dbg!(bin_size);
             let newvec = Vec::from_raw_parts(bin_ptr, bin_size, bin_size);
             newvec
+        }
+    }
+}
+
+impl Drop for MRubyCompiler2Context {
+    fn drop(&mut self) {
+        unsafe {
+            mrc_ccontext_free(self.c);
         }
     }
 }
