@@ -7,12 +7,12 @@ mod bindings {
     include!("./bindings.rs");
 }
 use bindings::{
-    FILE, MRC_DUMP_OK, mrc_ccontext, mrc_ccontext_free, mrc_ccontext_new, mrc_dump_irep,
-    mrc_dump_irep_cfunc, mrc_irep, mrc_irep_free, mrc_load_string_cxt, mrc_codedump_all,
+    MRC_DUMP_OK, mrc_ccontext, mrc_ccontext_free, mrc_ccontext_new, mrc_dump_irep, mrc_irep,
+    mrc_irep_free,
 };
 
 #[cfg(feature = "std")]
-use bindings::fdopen;
+use bindings::{FILE, fdopen, mrc_codedump_all, mrc_dump_irep_cfunc, mrc_load_string_cxt};
 
 #[derive(Debug)]
 pub struct MRubyCompiler2Error {
@@ -101,10 +101,7 @@ impl MRubyCompiler2Context {
                 return Err(MRubyCompiler2Error::new("Failed to compile code"));
             }
 
-            mrc_codedump_all(
-                self.c,
-                irep as *mut mrc_irep,
-            );
+            mrc_codedump_all(self.c, irep as *mut mrc_irep);
             mrc_irep_free(self.c, irep as *mut mrc_irep);
             Ok(())
         }
