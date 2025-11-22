@@ -7,9 +7,12 @@ mod bindings {
     include!("./bindings.rs");
 }
 use bindings::{
-    FILE, MRC_DUMP_OK, fdopen, mrc_ccontext, mrc_ccontext_free, mrc_ccontext_new, mrc_dump_irep,
+    FILE, MRC_DUMP_OK, mrc_ccontext, mrc_ccontext_free, mrc_ccontext_new, mrc_dump_irep,
     mrc_dump_irep_cfunc, mrc_irep, mrc_irep_free, mrc_load_string_cxt, mrc_codedump_all,
 };
+
+#[cfg(feature = "std")]
+use bindings::fdopen;
 
 #[derive(Debug)]
 pub struct MRubyCompiler2Error {
@@ -85,6 +88,7 @@ impl MRubyCompiler2Context {
         }
     }
 
+    #[cfg(feature = "std")]
     pub unsafe fn dump_bytecode(&mut self, code: &str) -> Result<(), MRubyCompiler2Error> {
         unsafe {
             let c_code = std::ffi::CString::new(code)
@@ -106,6 +110,7 @@ impl MRubyCompiler2Context {
         }
     }
 
+    #[cfg(feature = "std")]
     pub unsafe fn compile_to_file(
         &mut self,
         code: &str,
@@ -117,6 +122,7 @@ impl MRubyCompiler2Context {
         Ok(())
     }
 
+    #[cfg(feature = "std")]
     pub unsafe fn compile_to_c_function(
         &mut self,
         code: &str,
