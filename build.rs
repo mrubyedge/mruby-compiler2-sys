@@ -30,10 +30,8 @@ fn main() {
 
     println!("cargo:rustc-link-lib=mrubycompiler2");
     let bindings = bindgen::Builder::default()
-        .header("./vendor/mruby-compiler2/include/mrc_ccontext.h")
-        .header("./vendor/mruby-compiler2/include/mrc_irep.h")
-        .header("./vendor/mruby-compiler2/include/mrc_compile.h")
-        .header("./vendor/mruby-compiler2/include/mrc_dump.h")
+        .header("./vendor/mruby-compiler2/include/mruby_compiler.h")
+        .header("./vendor/mruby-compiler2/include/mrc_codedump.h")
         .clang_arg("-I./vendor/mruby-compiler2/include")
         .clang_arg("-I./vendor/mruby-compiler2/lib/prism/include")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))

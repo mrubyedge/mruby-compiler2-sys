@@ -17260,6 +17260,12 @@ const _: () = {
     ["Offset of field: rite_binary_footer::section_size"]
         [::std::mem::offset_of!(rite_binary_footer, section_size) - 4usize];
 };
+unsafe extern "C" {
+    pub fn mrc_codedump_all_file(c: *mut mrc_ccontext, irep: *mut mrc_irep, out: *mut FILE);
+}
+unsafe extern "C" {
+    pub fn mrc_codedump_all(c: *mut mrc_ccontext, irep: *mut mrc_irep);
+}
 pub type __builtin_va_list = *mut ::std::os::raw::c_char;
 pub type __uint128_t = u128;
 #[repr(C)]

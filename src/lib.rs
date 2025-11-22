@@ -8,7 +8,7 @@ mod bindings {
 }
 use bindings::{
     FILE, MRC_DUMP_OK, fdopen, mrc_ccontext, mrc_ccontext_free, mrc_ccontext_new, mrc_dump_irep,
-    mrc_dump_irep_cfunc, mrc_irep, mrc_irep_free, mrc_load_string_cxt,
+    mrc_dump_irep_cfunc, mrc_irep, mrc_irep_free, mrc_load_string_cxt, mrc_codedump_all,
 };
 
 #[derive(Debug)]
@@ -82,6 +82,27 @@ impl MRubyCompiler2Context {
 
             let newvec = Vec::from_raw_parts(bin_ptr, bin_size, bin_size);
             Ok(newvec)
+        }
+    }
+
+    pub unsafe fn dump_bytecode(&mut self, code: &str) -> Result<(), MRubyCompiler2Error> {
+        unsafe {
+            let c_code = std::ffi::CString::new(code)
+                .map_err(|_| MRubyCompiler2Error::new("Code includes null bytes"))?;
+            let mut ptr = c_code.as_ptr() as *const u8;
+            let irep =
+                mrc_load_string_cxt(self.c, &mut ptr as *mut *const u8, c_code.as_bytes().len());
+
+            if irep.is_null() {
+                return Err(MRubyCompiler2Error::new("Failed to compile code"));
+            }
+
+            mrc_codedump_all(
+                self.c,
+                irep as *mut mrc_irep,
+            );
+            mrc_irep_free(self.c, irep as *mut mrc_irep);
+            Ok(())
         }
     }
 
