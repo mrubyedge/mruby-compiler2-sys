@@ -1,3 +1,4 @@
 /target
 
 *.mrb
+examples/out.c
