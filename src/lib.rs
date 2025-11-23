@@ -50,6 +50,7 @@ pub struct MRubyCompiler2Context {
 }
 
 impl MRubyCompiler2Context {
+    /// Creates a new MRubyCompiler2Context
     pub unsafe fn new() -> Self {
         unsafe {
             let ccontext = mrc_ccontext_new(null_mut());
@@ -57,6 +58,8 @@ impl MRubyCompiler2Context {
         }
     }
 
+    /// Compiles the given mruby code into mruby bytecode binary
+    /// Returns the bytecode as a Vec<u8>
     pub unsafe fn compile(&mut self, code: &str) -> Result<Vec<u8>, MRubyCompiler2Error> {
         unsafe {
             let c_code = std::ffi::CString::new(code)
@@ -92,6 +95,7 @@ impl MRubyCompiler2Context {
         }
     }
 
+    /// Dumps the compiled bytecode of the given mruby code to stdout
     #[cfg(feature = "std")]
     pub unsafe fn dump_bytecode(&mut self, code: &str) -> Result<(), MRubyCompiler2Error> {
         unsafe {
@@ -111,6 +115,7 @@ impl MRubyCompiler2Context {
         }
     }
 
+    /// Compiles the given mruby code and writes the bytecode to the specified file path
     #[cfg(feature = "std")]
     pub unsafe fn compile_to_file(
         &mut self,
@@ -123,6 +128,7 @@ impl MRubyCompiler2Context {
         Ok(())
     }
 
+    /// Compiles the given mruby code and writes the bytecode as a C function to the specified file path
     #[cfg(feature = "std")]
     pub unsafe fn compile_to_c_function(
         &mut self,
