@@ -1,18 +1,27 @@
-use std::{os::fd::AsRawFd, ptr::null_mut};
+use std::ptr::null_mut;
 
 mod bindings {
     #![allow(nonstandard_style)]
     #![allow(unused)]
     #![allow(unnecessary_transmutes)]
+    #[cfg(not(target_arch = "wasm32"))]
     include!("./bindings.rs");
+
+    #[cfg(target_arch = "wasm32")]
+    include!("./bindings-wasm.rs");
+    #[cfg(target_arch = "wasm32")]
+    include!("./bindings-wasm-funcs.rs");
 }
 use bindings::{
     MRC_DUMP_OK, mrc_ccontext, mrc_ccontext_free, mrc_ccontext_new, mrc_dump_irep, mrc_irep,
-    mrc_irep_free,
+    mrc_irep_free, mrc_load_string_cxt,
 };
 
 #[cfg(feature = "std")]
-use bindings::{FILE, fdopen, mrc_codedump_all, mrc_dump_irep_cfunc, mrc_load_string_cxt};
+use std::os::unix::io::AsRawFd;
+
+#[cfg(feature = "std")]
+use bindings::{FILE, fdopen, mrc_codedump_all, mrc_dump_irep_cfunc};
 
 #[derive(Debug)]
 pub struct MRubyCompiler2Error {
@@ -26,6 +35,7 @@ impl MRubyCompiler2Error {
         }
     }
 
+    #[allow(unused)]
     fn from_error<E: std::error::Error>(msg: &str, err: E) -> MRubyCompiler2Error {
         MRubyCompiler2Error {
             details: format!("{}: {}", msg, err.to_string()),

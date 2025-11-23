@@ -4,7 +4,7 @@ use mruby_compiler2_sys::MRubyCompiler2Context;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     unsafe {
         let mut cxt = MRubyCompiler2Context::new();
-        cxt.dump_bytecode("puts \"Hello, mruby-compiler2!\"")?;
+        // cxt.dump_bytecode("puts \"Hello, mruby-compiler2!\"")?;
 
         let bin = cxt.compile("puts \"Hello, mruby-compiler2!\"")?;
 

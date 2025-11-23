@@ -29,16 +29,22 @@ fn main() {
         .compile("mrubycompiler2");
 
     println!("cargo:rustc-link-lib=mrubycompiler2");
+    /*
     let bindings = bindgen::Builder::default()
         .header("./vendor/mruby-compiler2/include/mruby_compiler.h")
         .header("./vendor/mruby-compiler2/include/mrc_codedump.h")
         .clang_arg("-I./vendor/mruby-compiler2/include")
         .clang_arg("-I./vendor/mruby-compiler2/lib/prism/include")
+        // .clang_arg("-I/Users/udzura/wasi-sdk/share/wasi-sysroot/include/wasm32-wasip1")
+        // .clang_arg("-mllvm")
+        // .clang_arg("-wasm-enable-sjlj")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");
 
     bindings
-        .write_to_file("./src/bindings.rs")
+        .write_to_file("./src/bindings")
+        // .write_to_file("./src/bindings-wasm.rs")
         .expect("Couldn't write bindings!");
+    */
 }
