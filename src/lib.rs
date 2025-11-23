@@ -59,7 +59,7 @@ impl MRubyCompiler2Context {
     }
 
     /// Compiles the given mruby code into mruby bytecode binary
-    /// Returns the bytecode as a Vec<u8>
+    /// Returns the bytecode as a `Vec<u8>`
     pub unsafe fn compile(&mut self, code: &str) -> Result<Vec<u8>, MRubyCompiler2Error> {
         unsafe {
             let c_code = std::ffi::CString::new(code)
