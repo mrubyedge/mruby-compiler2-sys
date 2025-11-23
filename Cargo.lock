@@ -141,6 +141,7 @@ dependencies = [
  "bindgen",
  "cc",
  "glob",
+ "libc",
 ]
 
 [[package]]

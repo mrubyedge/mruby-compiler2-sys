@@ -13,8 +13,14 @@ include = [
 ]
 
 [dependencies]
+libc = { version = "0.2.177", optional = true }
 
 [build-dependencies]
 bindgen = ">= 0"
 cc = ">= 1"
 glob = ">= 0"
+
+[features]
+default = [ "std" ]
+std = [ "dep:libc" ]
+no-std = []
