@@ -1,6 +1,6 @@
 [package]
 name = "mruby-compiler2-sys"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["Uchio Kondo <udzura@udzura.jp>", "Hitoshi Hasumi", "prism developers"]
 description = "mruby-compiler2 bindings for Rust"
