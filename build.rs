@@ -34,6 +34,11 @@ fn main() {
         .header("./vendor/mruby-compiler2/include/mrc_codedump.h")
         .clang_arg("-I./vendor/mruby-compiler2/include")
         .clang_arg("-I./vendor/mruby-compiler2/lib/prism/include")
+        .blocklist_item("FP_NAN")
+        .blocklist_item("FP_INFINITE")
+        .blocklist_item("FP_ZERO")
+        .blocklist_item("FP_SUBNORMAL")
+        .blocklist_item("FP_NORMAL")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");
