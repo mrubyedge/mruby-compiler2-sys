@@ -4,18 +4,19 @@ use glob::glob;
 fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
 
+    println!("cargo:rerun-if-changed=src/bindings.rs");
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rustc-link-search={}", out_dir);
     cc::Build::new()
         .files(
             glob("./vendor/mruby-compiler2/src/**/*.c")
                 .expect("cannot find c source")
-                .map(|x| x.unwrap())
+                .map(|x| x.unwrap()),
         )
         .files(
             glob("./vendor/mruby-compiler2/lib/prism/src/**/*.c")
                 .expect("cannot find c source")
-                .map(|x| x.unwrap())    
+                .map(|x| x.unwrap()),
         )
         .warnings(false)
         .define("MRB_NO_PRESYM", "")

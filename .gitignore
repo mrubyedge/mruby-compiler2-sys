@@ -2,3 +2,4 @@
 
 *.mrb
 examples/out.c
+src/bindings.rs 
