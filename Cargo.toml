@@ -1,6 +1,6 @@
 [package]
 name = "mruby-compiler2-sys"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 authors = [
     "Uchio Kondo <udzura@udzura.jp>",
@@ -9,7 +9,14 @@ authors = [
 ]
 description = "mruby-compiler2 bindings for Rust"
 license-file = "LICENSE"
-include = ["**/*.rs", "Cargo.toml", "vendor/*", "lib/.keep"]
+include = [
+    "src/lib.rs",
+    "build.rs",
+    "examples/*.rs",
+    "Cargo.toml",
+    "vendor/*",
+    "lib/.keep",
+]
 
 [dependencies]
 libc = { version = "0.2.177", optional = true }
