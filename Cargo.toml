@@ -1,16 +1,15 @@
 [package]
 name = "mruby-compiler2-sys"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
-authors = ["Uchio Kondo <udzura@udzura.jp>", "Hitoshi Hasumi", "prism developers"]
+authors = [
+    "Uchio Kondo <udzura@udzura.jp>",
+    "Hitoshi Hasumi",
+    "prism developers",
+]
 description = "mruby-compiler2 bindings for Rust"
 license-file = "LICENSE"
-include = [
-    "**/*.rs",
-    "Cargo.toml",
-    "vendor/*",
-    "lib/.keep",
-]
+include = ["**/*.rs", "Cargo.toml", "vendor/*", "lib/.keep"]
 
 [dependencies]
 libc = { version = "0.2.177", optional = true }
@@ -21,6 +20,6 @@ cc = ">= 1"
 glob = ">= 0"
 
 [features]
-default = [ "std" ]
-std = [ "dep:libc" ]
+default = ["std"]
+std = ["dep:libc"]
 no-std = []
