@@ -4,7 +4,6 @@ use glob::glob;
 fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
 
-    println!("cargo:rerun-if-changed=src/bindings.rs");
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rustc-link-search={}", out_dir);
     cc::Build::new()
@@ -44,7 +43,8 @@ fn main() {
         .generate()
         .expect("Unable to generate bindings");
 
+    let out = std::path::PathBuf::from(out_dir).join("bindings.rs");
     bindings
-        .write_to_file("./src/bindings.rs")
+        .write_to_file(out)
         .expect("Couldn't write bindings!");
 }

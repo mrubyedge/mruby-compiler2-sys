@@ -4,7 +4,7 @@ mod bindings {
     #![allow(nonstandard_style)]
     #![allow(unused)]
     #![allow(unnecessary_transmutes)]
-    include!("./bindings.rs");
+    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 use bindings::{
     MRC_DUMP_OK, mrc_ccontext, mrc_ccontext_free, mrc_ccontext_new, mrc_dump_irep, mrc_irep,
