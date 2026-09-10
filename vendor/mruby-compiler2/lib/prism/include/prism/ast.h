@@ -1753,6 +1753,7 @@ typedef struct pm_block_argument_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -1857,6 +1858,7 @@ typedef struct pm_block_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -5527,6 +5529,7 @@ typedef struct pm_keyword_hash_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -6484,6 +6487,7 @@ typedef struct pm_numbered_reference_read_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -6521,6 +6525,7 @@ typedef struct pm_optional_keyword_parameter_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -7073,6 +7078,7 @@ typedef struct pm_regular_expression_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -7105,6 +7111,7 @@ typedef struct pm_required_keyword_parameter_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -7223,6 +7230,7 @@ typedef struct pm_rescue_node {
 
  * Flags (#pm_parameter_flags):
  * * ::PM_PARAMETER_FLAGS_REPEATED_PARAMETER
+ * * ::PM_PARAMETER_FLAGS_NIL_BLOCK
  *
  * @extends pm_node_t
  */
@@ -8128,6 +8136,9 @@ typedef enum pm_loop_flags {
 typedef enum pm_parameter_flags {
     /** a parameter name that has been repeated in the method signature */
     PM_PARAMETER_FLAGS_REPEATED_PARAMETER = 4,
+
+    /** a block parameter written as `&nil`, which accepts no block (mruby) */
+    PM_PARAMETER_FLAGS_NIL_BLOCK = 8,
 
     PM_PARAMETER_FLAGS_LAST,
 } pm_parameter_flags_t;

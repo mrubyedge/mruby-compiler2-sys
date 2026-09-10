@@ -3456,6 +3456,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
                 flags++;
             }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
+                flags++;
+            }
             pm_buffer_append_byte(buffer, ']');
 
             // Dump the name field
@@ -3529,6 +3534,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
             if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_REPEATED_PARAMETER)) {
                 if (flags != 0) pm_buffer_append_byte(buffer, ',');
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
+                flags++;
+            }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
                 flags++;
             }
             pm_buffer_append_byte(buffer, ']');
@@ -6470,6 +6480,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
                 flags++;
             }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
+                flags++;
+            }
             pm_buffer_append_byte(buffer, ']');
 
             // Dump the name field
@@ -7183,6 +7198,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
                 flags++;
             }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
+                flags++;
+            }
             pm_buffer_append_byte(buffer, ']');
 
             // Dump the name field
@@ -7217,6 +7237,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
             if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_REPEATED_PARAMETER)) {
                 if (flags != 0) pm_buffer_append_byte(buffer, ',');
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
+                flags++;
+            }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
                 flags++;
             }
             pm_buffer_append_byte(buffer, ']');
@@ -7741,6 +7766,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
                 flags++;
             }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
+                flags++;
+            }
             pm_buffer_append_byte(buffer, ']');
 
             // Dump the name field
@@ -7770,6 +7800,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
             if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_REPEATED_PARAMETER)) {
                 if (flags != 0) pm_buffer_append_byte(buffer, ',');
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
+                flags++;
+            }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
                 flags++;
             }
             pm_buffer_append_byte(buffer, ']');
@@ -7891,6 +7926,11 @@ pm_dump_json(pm_buffer_t *buffer, const pm_parser_t *parser, const pm_node_t *no
             if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_REPEATED_PARAMETER)) {
                 if (flags != 0) pm_buffer_append_byte(buffer, ',');
                 pm_buffer_append_string(buffer, "\"REPEATED_PARAMETER\"", 20);
+                flags++;
+            }
+            if (PM_NODE_FLAG_P(cast, PM_PARAMETER_FLAGS_NIL_BLOCK)) {
+                if (flags != 0) pm_buffer_append_byte(buffer, ',');
+                pm_buffer_append_string(buffer, "\"NIL_BLOCK\"", 11);
                 flags++;
             }
             pm_buffer_append_byte(buffer, ']');

@@ -81,6 +81,11 @@
 #define MRC_ARGS_BLOCK()    ((mrc_aspec)1)
 
 /**
+ * Function accepts no block argument (`&nil`)
+ */
+#define MRC_ARGS_NOBLOCK()  ((mrc_aspec)1 << 23)
+
+/**
  * Function accepts any number of arguments
  */
 #define MRC_ARGS_ANY()      MRC_ARGS_REST()
@@ -3751,6 +3756,7 @@ lambda_body(mrc_codegen_scope *s, mrc_node *tree, mrc_node *body, pm_constant_id
 
 
   size_t i, ma, mma, oa, ra, pa, ppa, ka, kd, ba, forwarding;;
+  mrc_bool noblock = FALSE;
   forwarding = 0;
   int block_reg = 0;
   pm_constant_id_list_t *lv = (pm_constant_id_list_t *)codegen_palloc(s, sizeof(pm_constant_id_list_t));
@@ -3817,7 +3823,9 @@ lambda_body(mrc_codegen_scope *s, mrc_node *tree, mrc_node *body, pm_constant_id
     }
     ka = parameters->keywords.size;
     kd = parameters->keyword_rest ? 1 : 0;
-    ba = parameters->block ? 1 : 0;
+    noblock = parameters->block
+      && PM_NODE_FLAG_P(parameters->block, PM_PARAMETER_FLAGS_NIL_BLOCK);
+    ba = (parameters->block && !noblock) ? 1 : 0;
     nregs = ma + mma + oa + ra + pa + ppa + ka + kd + ba;
     mrc_constant_id_list_init_capacity(s, lv, nregs);
     // mandatory
@@ -3981,7 +3989,8 @@ lambda_body(mrc_codegen_scope *s, mrc_node *tree, mrc_node *body, pm_constant_id
     /* (23bits = 5:5:1:5:5:1:1) */
     ra = ra|forwarding;
     ba = ba|forwarding;
-    a = MRC_ARGS_REQ(ma)
+    a = (noblock? MRC_ARGS_NOBLOCK() : 0)
+      | MRC_ARGS_REQ(ma)
       | MRC_ARGS_OPT(oa)
       | (ra? MRC_ARGS_REST() : 0)
       | MRC_ARGS_POST(pa)

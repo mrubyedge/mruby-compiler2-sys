@@ -729,6 +729,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
                     found = true;
                 }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
+                    found = true;
+                }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);
                 pm_buffer_append_byte(output_buffer, '\n');
             }
@@ -836,6 +841,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                 if (cast->base.flags & PM_PARAMETER_FLAGS_REPEATED_PARAMETER) {
                     if (found) pm_buffer_append_byte(output_buffer, ',');
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
+                    found = true;
+                }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
                     found = true;
                 }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);
@@ -5568,6 +5578,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
                     found = true;
                 }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
+                    found = true;
+                }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);
                 pm_buffer_append_byte(output_buffer, '\n');
             }
@@ -6677,6 +6692,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
                     found = true;
                 }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
+                    found = true;
+                }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);
                 pm_buffer_append_byte(output_buffer, '\n');
             }
@@ -6731,6 +6751,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                 if (cast->base.flags & PM_PARAMETER_FLAGS_REPEATED_PARAMETER) {
                     if (found) pm_buffer_append_byte(output_buffer, ',');
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
+                    found = true;
+                }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
                     found = true;
                 }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);
@@ -7535,6 +7560,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
                     found = true;
                 }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
+                    found = true;
+                }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);
                 pm_buffer_append_byte(output_buffer, '\n');
             }
@@ -7576,6 +7606,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                 if (cast->base.flags & PM_PARAMETER_FLAGS_REPEATED_PARAMETER) {
                     if (found) pm_buffer_append_byte(output_buffer, ',');
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
+                    found = true;
+                }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
                     found = true;
                 }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);
@@ -7774,6 +7809,11 @@ prettyprint_node(pm_buffer_t *output_buffer, const pm_parser_t *parser, const pm
                 if (cast->base.flags & PM_PARAMETER_FLAGS_REPEATED_PARAMETER) {
                     if (found) pm_buffer_append_byte(output_buffer, ',');
                     pm_buffer_append_string(output_buffer, " repeated_parameter", 19);
+                    found = true;
+                }
+                if (cast->base.flags & PM_PARAMETER_FLAGS_NIL_BLOCK) {
+                    if (found) pm_buffer_append_byte(output_buffer, ',');
+                    pm_buffer_append_string(output_buffer, " nil_block", 10);
                     found = true;
                 }
                 if (!found) pm_buffer_append_string(output_buffer, " nil", 4);

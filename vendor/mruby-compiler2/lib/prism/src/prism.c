@@ -13890,10 +13890,15 @@ parse_parameters(
                 pm_token_t name;
 
                 bool repeated = false;
+                bool nil_block = false;
                 if (accept1(parser, PM_TOKEN_IDENTIFIER)) {
                     name = parser->previous;
                     repeated = pm_parser_parameter_name_check(parser, &name);
                     pm_parser_local_add_token(parser, &name, 1);
+                } else if (accept1(parser, PM_TOKEN_KEYWORD_NIL)) {
+                    /* `&nil` declares that the method accepts no block (mruby). */
+                    name = not_provided(parser);
+                    nil_block = true;
                 } else {
                     name = not_provided(parser);
                     parser->current_scope->parameters |= PM_SCOPE_PARAMETERS_FORWARDING_BLOCK;
@@ -13902,6 +13907,9 @@ parse_parameters(
                 pm_block_parameter_node_t *param = pm_block_parameter_node_create(parser, &name, &operator);
                 if (repeated) {
                     pm_node_flag_set_repeated_parameter(UP(param));
+                }
+                if (nil_block) {
+                    pm_node_flag_set(UP(param), PM_PARAMETER_FLAGS_NIL_BLOCK);
                 }
                 if (params->block == NULL) {
                     pm_parameters_node_block_set(params, param);
