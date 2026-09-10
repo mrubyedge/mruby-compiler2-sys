@@ -61,15 +61,28 @@ mrc_diagnostic_code_to_string(mrc_diagnostic_code code)
 void
 mrc_diagnostic_list_append(mrc_ccontext *c, const uint8_t * location_start, const char *message, mrc_diagnostic_code code)
 {
-  mrc_diagnostic_list *list = mrc_calloc(c, 1, sizeof(mrc_diagnostic_list));
-  line_and_column_by_start_and_offset(c->p->start, location_start, &list->line, &list->column);
+  mrc_diagnostic_list *list = (mrc_diagnostic_list *)mrc_calloc(c, 1, sizeof(mrc_diagnostic_list));
+  const uint8_t *file_start = c->p->start;
+  list->filename = NULL;
+#ifndef MRC_NO_STDIO
+  if (c->filename_table && 0 < c->filename_table_length && location_start) {
+    uint32_t offset = (uint32_t)(location_start - c->p->start);
+    int file_idx = 0;
+    for (int i = 1; i < c->filename_table_length; i++) {
+      if (offset < c->filename_table[i].start) break;
+      file_idx = i;
+    }
+    list->filename = c->filename_table[file_idx].filename;
+    file_start = c->p->start + c->filename_table[file_idx].start;
+  }
+#endif
+  line_and_column_by_start_and_offset(file_start, location_start, &list->line, &list->column);
   char buf[256];
   const char *diagnostic_code_str = mrc_diagnostic_code_to_string(code);
   snprintf(buf, sizeof(buf), "%s, %s", diagnostic_code_str, message);
   size_t len = strlen(buf);
   list->message = (char *)mrc_malloc(c, len + 1);
-  strcpy(list->message, buf);
-  list->message[len] = '\0';
+  memcpy(list->message, buf, len + 1);
   list->code = code;
 
   if (c->diagnostic_list == NULL) {
@@ -99,4 +112,3 @@ mrc_diagnostic_list_free(mrc_ccontext *c)
   }
   c->diagnostic_list = NULL;
 }
-
