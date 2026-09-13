@@ -1,8 +1,6 @@
 #ifndef MRC_COMMON_H
 #define MRC_COMMON_H
 
-#include <stdint.h>
-
 #define MRC_STRINGIZE0(expr) #expr
 #define MRC_STRINGIZE(expr) MRC_STRINGIZE0(expr)
 
@@ -10,38 +8,62 @@
   #if !defined(MRC_TARGET_MRUBY)
     #define MRC_TARGET_MRUBY
   #endif
-  #include <mruby.h>
 #endif
 #if defined(PICORB_VM_MRUBYC)
   #if !defined(MRC_TARGET_MRUBYC)
     #define MRC_TARGET_MRUBYC
   #endif
+#endif
+
+/* mruby.h must be included before <stdint.h> (it enforces this ordering on
+   some platforms) and it carries the core API's linkage, so include it up
+   front -- and outside the extern "C" wrap below. prism.h pulls mruby.h in
+   transitively through prism_xallocator.h; keeping it out of the wrap means
+   that under MRB_USE_CXX_ABI the core keeps its C++ linkage while only Prism
+   gets C linkage. */
+#if defined(MRC_TARGET_MRUBY)
+  #include <mruby.h>
+#elif defined(MRC_TARGET_MRUBYC)
   #include <mrubyc.h>
+  #define mrb_state void
+#else
+  /* May be building standalone mrbc. mruby.h would declare a core API this
+     binary does not link, but mrbconf.h on its own is self-contained, and it
+     is what settles the target's mrb_int width -- which mrc_int has to match,
+     because this mrbc dumps irep for that target (see MRC_INT32 below). */
+  #include <stdint.h>
+  #include <mrbconf.h>
   #define mrb_state void
 #endif
 
-#if !defined(MRC_TARGET_MRUBY) && !defined(PICORB_VM_MRUBYC)
-  /* May be building mrbc (picorbc) */
-  #define mrb_state void
-#endif
+#include <stdint.h>
 
 #if !defined(PRISM_XALLOCATOR)
   #define PRISM_XALLOCATOR
 #endif
+/* Prism is a vendored C library and is always compiled as C (its generated
+   code uses C constructs -- designated initializers, implicit void* casts --
+   that a C++ compiler cannot build). When this header is included from a C++
+   translation unit -- e.g. an MRB_USE_CXX_ABI build -- its declarations must
+   use C linkage so they match the C-compiled Prism objects. */
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "prism.h"
-
-#ifndef PICORUBY_VERSION
-  #define MRC_VERSION "unknown (standalone)"
-#else
-  #define MRC_VERSION PICORUBY_VERSION
+#ifdef __cplusplus
+}
 #endif
 
-#define MRC_RELEASE_YEAR    2026
-#define MRC_RELEASE_MONTH   1
-#define MRC_RELEASE_DAY     21
-#define MRC_RELEASE_DATE    MRC_STRINGIZE(MRC_RELEASE_YEAR) "-" \
-                            MRC_STRINGIZE(MRC_RELEASE_MONTH) "-" \
-                            MRC_STRINGIZE(MRC_RELEASE_DAY)
+#ifndef MRC_COMMIT_TIMESTAMP
+  #define MRC_COMMIT_TIMESTAMP "unknown"
+#endif
+#ifndef MRC_COMMIT_BRANCH
+  #define MRC_COMMIT_BRANCH "unknown"
+#endif
+#ifndef MRC_COMMIT_HASH
+  #define MRC_COMMIT_HASH "unknown"
+#endif
+#define MRC_BUILD_INFO MRC_COMMIT_TIMESTAMP " " MRC_COMMIT_BRANCH " " MRC_COMMIT_HASH
 
 #ifdef MRB_USE_CXX_ABI
 #define MRC_USE_CXX_ABI
@@ -97,6 +119,13 @@ typedef uint8_t mrc_bool;
 # ifndef TRUE
 #  define TRUE 1
 # endif
+#endif
+
+/* mrc_int must be as wide as the VM's mrb_int and no wider: the pool literals
+   and the constant folding below are dumped for a target whose loader rejects
+   an IREP_TT_INT64 entry unless it was built with MRB_INT64 (src/load.c). */
+#if defined(MRB_INT32) && !defined(MRC_INT32)
+#define MRC_INT32 1
 #endif
 
 #if !defined(MRC_INT32)

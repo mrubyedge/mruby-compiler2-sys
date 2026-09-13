@@ -147,7 +147,9 @@ get_pool_block_size(mrc_ccontext *c, const mrc_irep *irep)
 
     case IREP_TT_BIGINT:
       {
-        mrc_int len = irep->pool[pool_no].u.str[0];
+        /* str[0] is an unsigned length byte (0-255); reading it through a
+           signed char would make a >=128 byte bignum literal negative. */
+        mrc_int len = (unsigned char)irep->pool[pool_no].u.str[0];
         mrc_assert_int_fit(mrc_int, len, size_t, SIZE_MAX);
         size += (size_t)len+2;
       }
@@ -213,7 +215,7 @@ write_pool_block(mrc_ccontext *c, const mrc_irep *irep, uint8_t *buf)
 
     case IREP_TT_BIGINT:
       cur += mrc_uint8_to_bin(IREP_TT_BIGINT, cur); /* data type */
-      len = irep->pool[pool_no].u.str[0];
+      len = (unsigned char)irep->pool[pool_no].u.str[0];
       memcpy(cur, irep->pool[pool_no].u.str, (size_t)len+2);
       cur += len+2;
       break;
@@ -597,7 +599,10 @@ write_section_debug(mrc_ccontext *c, const mrc_irep *irep, uint8_t *cur, mrc_sym
 static void
 create_lv_sym_table(mrc_ccontext *c, const mrc_irep *irep, mrc_sym **syms, uint32_t *syms_len)
 {
-  pm_constant_id_t null_mark = pm_constant_pool_find(&c->p->constant_pool, NULL, 0);
+  /* Match the non-NULL zero-length marker inserted by the code generator;
+     a NULL argument here is undefined behavior (memcmp nonnull) that clang
+     miscompiles. */
+  pm_constant_id_t null_mark = pm_constant_pool_find(&c->p->constant_pool, (const uint8_t *)"", 0);
 
   if (*syms == NULL) {
     *syms = (mrc_sym*)mrc_malloc(c, sizeof(mrc_sym) * 1);
@@ -605,7 +610,7 @@ create_lv_sym_table(mrc_ccontext *c, const mrc_irep *irep, mrc_sym **syms, uint3
 
   for (int i = 0; i + 1 < irep->nlocals; i++) {
     mrc_sym const name = irep->lv[i];
-    if (name == null_mark) continue;
+    if (name == 0 || name == null_mark) continue;
     if (find_filename_index(*syms, *syms_len, name) != -1) continue;
 
     ++(*syms_len);
@@ -644,10 +649,13 @@ write_lv_record(mrc_ccontext *c, const mrc_irep *irep, uint8_t **start, mrc_sym 
 {
   uint8_t *cur = *start;
 
-  pm_constant_id_t null_mark = pm_constant_pool_find(&c->p->constant_pool, NULL, 0);
+  /* Match the non-NULL zero-length marker inserted by the code generator;
+     a NULL argument here is undefined behavior (memcmp nonnull) that clang
+     miscompiles. */
+  pm_constant_id_t null_mark = pm_constant_pool_find(&c->p->constant_pool, (const uint8_t *)"", 0);
 
   for (int i = 0; i + 1 < irep->nlocals; i++) {
-    if (irep->lv[i] == null_mark) {
+    if (irep->lv[i] == 0 || irep->lv[i] == null_mark) {
       cur += mrc_uint16_to_bin(RITE_LV_NULL_MARK, cur);
     }
     else {
@@ -759,7 +767,11 @@ debug_info_defined_p(const mrc_irep *irep)
 static mrc_bool
 lv_defined_p(const mrc_irep *irep)
 {
-  if (irep->lv && 0 < ((pm_constant_id_list_t *)irep->lv)->size) { return TRUE; }
+  /* irep->lv is an mrc_sym array (NULL when the scope has no named locals);
+     the old `((pm_constant_id_list_t *)irep->lv)->size` reinterpreted it as a
+     different struct, an out-of-bounds read and a strict-aliasing violation
+     that clang miscompiles. A plain NULL check matches the bytecode dumper. */
+  if (irep->lv) { return TRUE; }
   for (int i = 0; i < irep->rlen; i++) {
     if (lv_defined_p(irep->reps[i])) { return TRUE; }
   }

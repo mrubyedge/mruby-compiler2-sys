@@ -36,7 +36,7 @@ int mrc_dump_irep(mrc_ccontext *c, const mrc_irep *irep, uint8_t flags, uint8_t 
 /* Binary Format Version Major:Minor */
 /*   Major: Incompatible to prior versions */
 /*   Minor: Upper-compatible to prior versions */
-#define RITE_BINARY_MAJOR_VER          "03"
+#define RITE_BINARY_MAJOR_VER          "04"
 #define RITE_BINARY_MINOR_VER          "00"
 #define RITE_BINARY_FORMAT_VER         RITE_BINARY_MAJOR_VER RITE_BINARY_MINOR_VER
 #if defined(RITE_COMPILER_NAME)
@@ -46,7 +46,7 @@ int mrc_dump_irep(mrc_ccontext *c, const mrc_irep *irep, uint8_t flags, uint8_t 
 #define RITE_PARSER_NAME               "Prism"
 #define RITE_COMPILER_VERSION          "0000"
 
-#define RITE_VM_VER                    "0300"
+#define RITE_VM_VER                    "0400"
 
 #define RITE_BINARY_EOF                "END\0"
 #define RITE_SECTION_IREP_IDENT        "IREP"
@@ -55,6 +55,11 @@ int mrc_dump_irep(mrc_ccontext *c, const mrc_irep *irep, uint8_t flags, uint8_t 
 
 #define MRC_DUMP_DEFAULT_STR_LEN      128
 #define MRC_DUMP_ALIGNMENT            sizeof(uint32_t)
+
+/* The RITE structs below are identical to the ones in mruby's
+   <mruby/dump.h>. Guard them so both headers can coexist in one
+   translation unit (e.g. the amalgamated build). */
+#ifndef MRUBY_DUMP_H
 
 /* binary header */
 struct rite_binary_header {
@@ -94,6 +99,8 @@ struct rite_section_lv_header {
 struct rite_binary_footer {
   RITE_SECTION_HEADER;
 };
+
+#endif /* !MRUBY_DUMP_H */
 
 static inline size_t
 mrc_uint8_to_bin(uint8_t s, uint8_t *bin)
@@ -145,10 +152,9 @@ mrc_bin_to_uint8(const uint8_t *bin)
 static inline const char*
 mrc_description(void)
 {
-  return  MRC_VERSION " (" MRC_RELEASE_DATE ") Parser: " RITE_PARSER_NAME ", RITE: " RITE_BINARY_FORMAT_VER;
+  return "RITE" RITE_BINARY_FORMAT_VER " (" MRC_BUILD_INFO ") Parser: " RITE_PARSER_NAME "-" PRISM_VERSION;
 }
 
 MRC_END_DECL
 
 #endif // MRC_DUMP_H
-
